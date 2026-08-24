@@ -1,0 +1,17 @@
+{
+  "name": "STRATEGYNOTE",
+  "short_name": "STRATEGYNOTE",
+  "description": "STRATEGYNOTE - リアルタイム自動連動Webアプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0d14",
+  "theme_color": "#141824",
+  "icons": [
+    {
+      "src": "assets/app_icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
