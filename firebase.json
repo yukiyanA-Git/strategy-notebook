@@ -1,6 +1,6 @@
-{
+﻿{
   "hosting": {
-    "site": "strategy-notebook",
+    "site": "strategy-notebook-app",
     "public": ".",
     "ignore": [
       "firebase.json",
