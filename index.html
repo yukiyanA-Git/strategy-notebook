@@ -16,8 +16,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5012440476019514" crossorigin="anonymous"></script>
 </head>
 <body class="gamer-dark" id="appBody">
   <!-- Clean 2-Row Spacious Header Bar -->
@@ -27,23 +25,6 @@
       <div class="logo-area">
         <img src="assets/app_icon.jpg" alt="Logo" class="logo-img-icon" id="appLogoImg">
         <span class="logo-text" id="appLogoText">STRATEGY<span class="highlight">NOTE</span></span>
-      </div>
-
-      <!-- 💎 STRATEGY NOTE 専用高級アクリル額縁 広告枠 (AcrylicAdBanner) -->
-      <div class="acrylic-ad-frame header-ad" id="strategyAdBannerHeader">
-        <div class="acrylic-ad-inner">
-          <div class="acrylic-ad-content">
-            <ins class="adsbygoogle"
-                 style="display:block; width:100%; height:100%;"
-                 data-ad-client="ca-pub-5012440476019514"
-                 data-ad-format="horizontal"
-                 data-full-width-responsive="false"></ins>
-            <div class="ad-placeholder-text" style="pointer-events: none;">
-              <span>✨ PREMIUM SPONSOR / 広告掲載スペース</span>
-            </div>
-          </div>
-          <div class="sponsored-label">A D</div>
-        </div>
       </div>
 
       <div class="header-right-cluster">
@@ -57,8 +38,8 @@
           <i class="fa-solid fa-tower-broadcast"></i> <span id="lblLiveStreamBtn">📡 ライブ連動</span>
         </button>
 
-        <!-- Plan Simulator Badge -->
-        <button class="btn-plan-badge free-plan" id="btnPlanSimulator" title="クリックで【無料/有料】切り替え">
+        <!-- Plan Status Badge (Shows Current Plan) -->
+        <button class="btn-plan-badge free-plan" id="btnPlanSimulator" style="cursor: pointer;" title="クリックで有料プランのご案内を表示">
           <i class="fa-solid fa-seedling" id="iconPlan"></i> <span id="lblPlanBadge">🆓 無料 (3冊/100P)</span>
         </button>
 
@@ -623,11 +604,11 @@
     </div>
   </div>
 
-  <!-- Handwriting Canvas Modal -->
+  <!-- Interactive Handwriting & Dynamic Stamp Canvas Modal -->
   <div class="modal-overlay" id="modalDraw">
     <div class="modal-card modal-lg">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-pen-line"></i> 手書き ＆ 画像合成キャンバス</h3>
+        <h3><i class="fa-solid fa-pen-line"></i> 手書き ＆ スタンプ合成キャンバス</h3>
         <button class="modal-close" data-close="modalDraw">&times;</button>
       </div>
       <div class="modal-body">
@@ -645,7 +626,7 @@
         </div>
 
         <div class="stamp-bar" id="stampBar">
-          <span class="stamp-label"><i class="fa-solid fa-icons"></i> スタンプ:</span>
+          <span class="stamp-label"><i class="fa-solid fa-icons"></i> スタンプ追加:</span>
           <button class="stamp-btn" data-emoji="⚔️">⚔️</button>
           <button class="stamp-btn" data-emoji="🛡️">🛡️</button>
           <button class="stamp-btn" data-emoji="💀">💀</button>
@@ -660,7 +641,8 @@
 
         <div class="draw-canvas-wrapper" id="drawCanvasWrapper">
           <canvas id="drawCanvas" width="740" height="360"></canvas>
-          <div class="canvas-hint">💡 Ctrl + V でスクショやアイコンをキャンバスに直接貼り付け可能</div>
+          <div id="stampOverlayContainer" class="stamp-overlay-container"></div>
+          <div class="canvas-hint">💡 スタンプはドラッグで移動、＋/ーで拡大縮小、×で削除できます</div>
         </div>
       </div>
     </div>
