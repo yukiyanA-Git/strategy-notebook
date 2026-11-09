@@ -2,81 +2,113 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STRATEGYNOTE</title>
-
-  <!-- Official Open Book App Icon, Favicon & Smartphone PWA Manifest -->
-  <link rel="icon" type="image/jpeg" href="assets/app_icon.jpg">
-  <link rel="apple-touch-icon" href="assets/app_icon.jpg">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#141824">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>STRATEGYNOTE - デジタルノート＆操作マニュアル</title>
+  
+  <meta name="theme-color" content="#0b0d14">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- FontAwesome 6 (Official Pro Specs) & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Cache Buster for Desktop PWA / Browser Shortcuts -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
+  <!-- App Icon & Manifest Links for Design A (Original Dark Neon Strategy Notebook) -->
+  <link rel="manifest" href="manifest.json?v=v2">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=v2">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=v2">
+  <link rel="apple-touch-icon" href="assets/icon-512.png?v=v2">
+  
+  <link rel="stylesheet" href="styles.css?v=20260918_v1">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5012440476019514" crossorigin="anonymous"></script>
 </head>
-<body class="gamer-dark" id="appBody">
-  <!-- Clean 2-Row Spacious Header Bar -->
-  <header class="app-header-2tier">
-    <!-- Row 1: Brand Logo & Control Cluster -->
+<body id="appBody" class="gamer-dark">
+
+  <!-- Main Top Application Header (2-Tier Non-Overlapping Layout) -->
+  <header class="app-header-2tier" id="appHeader">
+    <!-- Row 1: Brand Logo & Global Navigation Controls -->
     <div class="header-top-row">
-      <div class="logo-area">
-        <img src="assets/app_icon.jpg" alt="Logo" class="logo-img-icon" id="appLogoImg">
-        <span class="logo-text" id="appLogoText">STRATEGY<span class="highlight">NOTE</span></span>
+      <div class="logo-area" title="STRATEGYNOTE - ノート＆マニュアル">
+        <i class="fa-solid fa-book-bookmark logo-icon"></i>
+        <span class="logo-text">STRATEGYNOTE</span>
       </div>
 
       <div class="header-right-cluster">
-        <!-- Google Login / User Profile Button -->
-        <button class="btn-secondary btn-sm" id="btnGoogleAuth" title="Googleアカウントでログイン / クラウド同期">
-          <i class="fa-brands fa-google" style="color:var(--accent-cyan);"></i> <span id="lblGoogleAuth">Google ログイン</span>
+        <!-- Manual Cloud Sync Refresh Button -->
+        <button class="btn-manual-sync" id="btnManualSync" title="クリックでクラウドデータを即時最新化 (手動同期)">
+          <i class="fa-solid fa-arrows-rotate" id="iconManualSync"></i> <span>☁️ 同期最新化</span>
         </button>
 
-        <!-- Live Stream Button -->
-        <button class="btn-live-stream" id="btnLiveStream" title="ライブ配信・連動めくり（同時視聴）">
+        <!-- Google Account Login Button -->
+        <button class="btn-google-auth" id="btnGoogleAuth" title="Googleアカウントでログインして端末間リアルタイム同期">
+          <i class="fa-brands fa-google"></i> <span id="lblGoogleAuth">Google ログイン</span>
+        </button>
+
+        <!-- Live Broadcast Button -->
+        <button class="btn-live-stream" id="btnLiveStream" title="リアルタイム配信＆同期閲覧 (同時参加上限10名)">
           <i class="fa-solid fa-tower-broadcast"></i> <span id="lblLiveStreamBtn">📡 ライブ連動</span>
         </button>
 
-        <!-- Plan Status Badge (Shows Current Plan) -->
-        <button class="btn-plan-badge free-plan" id="btnPlanSimulator" style="cursor: pointer;" title="クリックで有料プランのご案内を表示">
-          <i class="fa-solid fa-seedling" id="iconPlan"></i> <span id="lblPlanBadge">🆓 無料 (3冊/100P)</span>
+        <!-- Free vs Paid Plan Simulator Badge -->
+        <button class="btn-plan-badge free-plan" id="btnPlanSimulator" title="クリックで無料/有料プラン動作をテスト切り替え">
+          <i class="fa-solid fa-seedling" id="iconPlan"></i> <span id="lblPlanBadge">🆓 クラウド同期 (10冊/30P)</span>
         </button>
 
-        <!-- Theme Picker Button -->
-        <button class="btn-persona-toggle" id="btnPersonaToggle" title="カラーテーマの選択（5種類のテーマ）">
-          <i class="fa-solid fa-palette" id="iconPersona"></i> <span id="lblPersona">🎨 テーマ切替</span>
+        <!-- Persona / Color Theme Selector Toggle -->
+        <button class="btn-persona-toggle" id="btnPersonaToggle" title="カラーテーマ切り替え (5種類)">
+          <i class="fa-solid fa-palette"></i> テーマ選択
         </button>
 
-        <!-- Icon Action Buttons -->
         <div class="header-actions">
-          <button class="btn-icon" id="btnHeaderSidebarToggle" title="編集ツール表示/非表示">
-            <i class="fa-solid fa-sliders"></i>
+          <button class="btn-icon active desktop-only" id="btnHeaderSidebarToggle" title="編集ツールの表示/非表示">
+            <i class="fa-solid fa-bars"></i>
           </button>
-          <button class="btn-icon" id="btnSoundToggle" title="めくり効果音">
+          <button class="btn-icon active desktop-only" id="btnSoundToggle" title="めくり効果音 (ON/OFF)">
             <i class="fa-solid fa-volume-high" id="iconSound"></i>
           </button>
-          <button class="btn-icon" id="btnToggleMode" title="表示モード（見開き / 単一）">
+          <button class="btn-icon desktop-only" id="btnToggleMode" title="表示モード（見開き / 1ページ）">
             <i class="fa-solid fa-book-open" id="iconMode"></i>
           </button>
-          <button class="btn-icon" id="btnSpeedToggle" title="めくり速度（3D / 高速即時）">
+          <button class="btn-icon" id="btnFullscreenToggle" title="全画面表示 (F11 / Escで解除)">
+            <i class="fa-solid fa-expand" id="iconFullscreen"></i>
+          </button>
+          <button class="btn-icon desktop-only" id="btnSpeedToggle" title="めくり速度（3D / 高速即時）">
             <i class="fa-solid fa-cube" id="iconSpeed"></i>
           </button>
           <button class="btn-icon" id="btnSearch" title="ノート内検索 (Ctrl+F)">
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
-          <button class="btn-icon" id="btnExportImport" title="共有・エクスポート">
+          <button class="btn-icon desktop-only" id="btnExportImport" title="共有・エクスポート">
             <i class="fa-solid fa-share-nodes"></i>
           </button>
-          <button class="btn-icon" id="btnShortcuts" title="キーボード設定">
+          <button class="btn-icon desktop-only" id="btnShortcuts" title="キーボード設定">
             <i class="fa-solid fa-keyboard"></i>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Row 2: Dedicated Full-Width Notebook Tabs Bar -->
+    <!-- Row 2: Dedicated Full-Width Notebook Tabs Bar & Edit Tools Toggle Button -->
     <div class="header-tabs-row">
+      <!-- Non-Overlapping Sidebar Toggle Button inside Header -->
+      <button class="btn-sidebar-toggle-floating" id="btnFloatingSidebar" title="メニュー・目次を開く">
+        <i class="fa-solid fa-bars"></i> <span id="lblFloatingSidebar">編集ツール</span>
+      </button>
+
       <nav class="tabs-container" id="tabsContainer">
         <div class="tabs-scroll" id="tabsScroll">
           <!-- Tabs rendered dynamically -->
@@ -90,20 +122,15 @@
 
   <!-- Main Content Workspace -->
   <main class="main-workspace">
-    <!-- Floating Sidebar Toggle Button -->
-    <button class="btn-sidebar-toggle-floating" id="btnFloatingSidebar" title="編集ツールを開く">
-      <i class="fa-solid fa-bars"></i> 編集ツール
-    </button>
-
     <!-- Categorized Left Sidebar -->
     <aside class="quick-sidebar" id="quickSidebar">
       <div class="sidebar-header">
-        <h3><i class="fa-solid fa-wand-magic-sparkles"></i> 編集ツール</h3>
+        <h3 id="lblSidebarTitle"><i class="fa-solid fa-wand-magic-sparkles"></i> 編集ツール</h3>
         <button class="btn-subtle" id="btnToggleSidebar" title="たたむ"><i class="fa-solid fa-chevron-left"></i> 閉じる</button>
       </div>
 
-      <!-- 1. Target Page Selection Card -->
-      <div class="sidebar-section active-page-selector-card">
+      <!-- 1. Target Page Selection Card (Mobile Hidden Editor) -->
+      <div class="sidebar-section active-page-selector-card mobile-hide-editor">
         <label class="section-label"><i class="fa-solid fa-bullseye"></i> 編集対象ページの選択</label>
         <div class="page-target-buttons" id="pageTargetButtons">
           <!-- Rendered dynamically -->
@@ -111,8 +138,8 @@
         <small class="target-hint-text">💡 ノートを直接クリックしても切り替えられます</small>
       </div>
 
-      <!-- 2. Page Operations Card -->
-      <div class="sidebar-section">
+      <!-- 2. Page Operations Card (Mobile Hidden Editor) -->
+      <div class="sidebar-section mobile-hide-editor">
         <label class="section-label"><i class="fa-solid fa-book-medical"></i> ページの挿入・複製・削除</label>
         <div class="action-list">
           <button class="btn-primary" id="btnAddPage">
@@ -130,9 +157,12 @@
         </div>
       </div>
 
-      <!-- 3. Image Paste & Drop Section -->
-      <div class="sidebar-section">
-        <label class="section-label"><i class="fa-solid fa-image"></i> 画像の取り込み</label>
+      <!-- 3. Image Paste & Drop Section (Mobile Hidden Editor) -->
+      <div class="sidebar-section mobile-hide-editor">
+        <label class="section-label"><i class="fa-solid fa-image"></i> 画像の取り込み ＆ スニッピング</label>
+        <button class="btn-primary btn-sm" id="btnStartSnipping" style="width:100%; margin-bottom:8px; background:linear-gradient(135deg, #0284c7, #06b6d4); border:none; box-shadow:0 2px 10px rgba(6,182,212,0.35); font-weight:700;">
+          <i class="fa-solid fa-crop-simple"></i> <span id="lblSnippingBtn">✂️ 画面スニッピング (切り取り)</span>
+        </button>
         <div class="paste-drop-zone" id="dropZone">
           <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
           <div class="drop-text">
@@ -146,186 +176,257 @@
         </div>
       </div>
 
-      <!-- 4. Overlay Tools Section (Clean Responsive Click Target) -->
-      <div class="sidebar-section">
+      <!-- 4. Overlay Tools Section (Mobile Hidden Editor) -->
+      <div class="sidebar-section mobile-hide-editor">
         <label class="section-label"><i class="fa-solid fa-layer-group"></i> ノート要素の追加</label>
         <div class="tool-grid">
-          <button class="tool-btn" id="btnAddText">
-            <i class="fa-solid fa-font"></i>
-            <span>メモ文字</span>
+          <button class="tool-btn" id="btnToolSnipping" style="border-color:var(--accent-cyan); background:rgba(0,242,254,0.08);" title="別画面やウィンドウの一部を枠で囲って切り取り貼り付け">
+            <i class="fa-solid fa-crop-simple" style="color:var(--accent-cyan);"></i>
+            <span style="color:var(--accent-cyan); font-weight:700;">スニッピング</span>
           </button>
           <button class="tool-btn" id="btnAddLink">
             <i class="fa-solid fa-link"></i>
             <span>Webリンク</span>
           </button>
           <button class="tool-btn" id="btnAddDraw">
-            <i class="fa-solid fa-pen-line"></i>
-            <span>手書きノート</span>
+            <i class="fa-solid fa-pen-nib"></i>
+            <span>手書きメモ</span>
           </button>
           <button class="tool-btn" id="btnAddTagBoss">
-            <i class="fa-solid fa-tags" id="iconBossTag"></i>
-            <span id="lblBossTag">重要メモ/タグ</span>
+            <i class="fa-solid fa-tags"></i>
+            <span>重要タグ</span>
           </button>
         </div>
       </div>
 
-      <!-- 5. Protection Lock & Bookmark Section -->
-      <div class="sidebar-section">
-        <label class="section-label"><i class="fa-solid fa-shield-halved"></i> 誤操作防止 ＆ 見出し</label>
+      <!-- 5. Chapter Index & Lock Management (Mobile Hidden Editor) -->
+      <div class="sidebar-section mobile-hide-editor">
+        <label class="section-label"><i class="fa-solid fa-bookmark"></i> 見出し ＆ 編集ロック</label>
         <div class="action-list">
-          <button class="btn-secondary btn-sm" id="btnTogglePageLock" style="border-color:var(--accent-amber); color:var(--accent-amber);">
-            <i class="fa-solid fa-lock" id="iconLockBtn"></i> <span id="lblLockBtn">対象ページを編集ロック</span>
-          </button>
           <button class="btn-secondary btn-sm" id="btnSetBookmarkLabel">
             <i class="fa-solid fa-tag"></i> <span id="lblSetBookmarkBtn">P.1 にインデックスをつける</span>
           </button>
-          <button class="btn-secondary btn-sm btn-subtle" id="btnRemoveBookmarkLabel">
-            <i class="fa-solid fa-tag-slash"></i> インデックス解除
+          <button class="btn-secondary btn-sm" id="btnRemoveBookmarkLabel">
+            <i class="fa-solid fa-eraser"></i> 見出しインデックス解除
+          </button>
+          <button class="btn-secondary btn-sm" id="btnTogglePageLock" style="border-color:var(--accent-amber); color:var(--accent-amber);">
+            <i class="fa-solid fa-lock-open" id="iconLockBtn"></i> <span id="lblLockBtn">P.1 を編集ロック</span>
           </button>
         </div>
       </div>
 
-      <!-- 6. Capacity Status Card -->
-      <div class="sidebar-section status-card">
+      <!-- 6. Mobile Accessible Share & Settings Section -->
+      <div class="sidebar-section">
+        <label class="section-label"><i class="fa-solid fa-gear"></i> 共有 ＆ 設定</label>
+        <div class="action-list">
+          <button class="btn-secondary btn-sm" id="btnSidebarShare">
+            <i class="fa-solid fa-share-nodes"></i> ノート共有・出力 (エクスポート)
+          </button>
+          <button class="btn-secondary btn-sm" id="btnSidebarShortcuts">
+            <i class="fa-solid fa-keyboard"></i> ショートカット設定
+          </button>
+        </div>
+      </div>
+
+      <!-- 7. Realtime Account Cloud Status Card -->
+      <div class="sidebar-section cloud-status-card">
         <div class="status-item">
-          <span class="status-label">現在のプラン:</span>
-          <span class="status-value highlight-green" id="sidebarPlanName">🆓 無料プラン</span>
+          <span class="status-label"><i class="fa-solid fa-cloud"></i> アカウント同期:</span>
+          <span class="status-value" id="sidebarCloudSyncStatus">📱 ローカル保存のみ</span>
         </div>
         <div class="status-item">
-          <span class="status-label">クラウド同期:</span>
-          <span class="status-value" id="sidebarCloudSyncStatus">未ログイン</span>
+          <span class="status-label"><i class="fa-solid fa-shield"></i> プラン制限:</span>
+          <span class="status-value" id="sidebarPlanName">🆓 無料プラン</span>
         </div>
         <div class="status-item">
-          <span class="status-label">ノート作成数:</span>
-          <span class="status-value" id="sidebarNbUsage">1 / 3 冊</span>
+          <span class="status-label">📚 ノート作成数:</span>
+          <span class="status-value" id="sidebarNbUsage">1 / 10 冊</span>
         </div>
         <div class="status-item">
-          <span class="status-label">総ページ数:</span>
-          <span class="status-value" id="sidebarPageUsage">2 / 100 ページ</span>
+          <span class="status-label">📄 合計ページ数:</span>
+          <span class="status-value" id="sidebarPageUsage">1 / 30 ページ</span>
         </div>
+      </div>
+
+      <!-- 8. yukiyanArt 共通 Dark Glassmorphism サポートボタン -->
+      <div class="sidebar-section" style="padding-top: 2px; padding-bottom: 8px;">
+        <a href="https://yukiyanart-feedback-hub.web.app/?app_id=strategy_note" target="_blank" rel="noopener noreferrer" class="yukiyanart-support-btn" title="ご意見・改善要望・不具合報告はこちら">
+          <span class="support-icon">💬</span>
+          <span>yukiyanArt フィードバック・サポート</span>
+        </a>
       </div>
     </aside>
 
-    <!-- Notebook Viewport -->
+    <!-- Main Notebook 3D Viewport Workspace -->
     <section class="notebook-viewport" id="notebookViewport">
-      <!-- Navigation Arrow Left -->
-      <button class="nav-arrow nav-prev" id="btnPrevPage" title="前のページへ (←)">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <!-- The Notebook Wrapper with Chapter Index Tabs on Top Edge -->
       <div class="book-wrapper mode-double" id="bookWrapper">
-        <div class="page-bookmarks-bar" id="pageBookmarksBar"></div>
+        
+        <!-- Top Horizontal Chapter Bookmark Tabs Bar -->
+        <div class="page-bookmarks-bar" id="pageBookmarksBar">
+          <!-- Rendered dynamically -->
+        </div>
 
-        <!-- 3D Book Container -->
-        <div class="book-container mode-double" id="bookContainer"></div>
+        <button class="nav-arrow nav-prev" id="btnPrevPage" title="前のページ (← / PgUp)">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="book-container mode-double" id="bookContainer">
+          <!-- Pages rendered dynamically -->
+        </div>
+
+        <button class="nav-arrow nav-next" id="btnNextPage" title="次のページ (→ / PgDn)">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
 
-      <!-- Navigation Arrow Right -->
-      <button class="nav-arrow nav-next" id="btnNextPage" title="次のページへ (→)">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-
-      <!-- Toast Notification -->
-      <div class="toast-notification" id="toast"></div>
+      <!-- Drag & Drop Upload Overlay (Hidden / Zero-layout shift) -->
+      <div class="drop-zone-overlay" id="dropZoneOverlay"></div>
     </section>
   </main>
 
-  <!-- Subtly Styled Chronos Luxury Ad Banner Bar (Bottom) -->
+  <!-- Ad Banner for Free Tier (Google AdSense Enabled) - Placed directly below Workspace -->
   <div class="free-ad-banner-bar" id="adBannerBar">
-    <div class="chronos-ad-content">
-      <span class="chronos-badge">CHRONOS SPONSOR</span>
-      <span class="chronos-ad-text">
-        <span class="highlight-gold">CHRONOS EDITION</span> ✦ プレミアムパートナーシップ広告
-      </span>
-      <span class="chronos-plan-note">
-        （有料プラン: 広告非表示 ＋ ノート作成上限 3冊 ➔ 30冊に拡大）
-      </span>
-      <button class="btn-chronos-upgrade" id="btnRemoveAdUpgrade">
-        👑 月額200円プラン
-      </button>
+    <div class="chronos-ad-content" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; max-height:90px;"
+           data-ad-client="ca-pub-5012440476019514"
+           data-ad-slot="6530054130"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+      </script>
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-size: 0.72rem; opacity: 0.85;">
+        <span style="letter-spacing:1.5px; font-weight:600;"><i class="fa-solid fa-bullhorn" style="color:var(--accent-amber);"></i> S P O N S O R E D ｜ 有料プラン（月額200円）で広告表示オフ ＆ 最大30冊・ページ無制限へ拡大</span>
+        <button class="btn-sm btn-primary" id="btnRemoveAdUpgrade" style="padding:2px 8px; font-size:0.7rem;">今すぐアップグレード</button>
+      </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation Control Bar -->
+  <!-- Bottom Application Footer -->
   <footer class="app-footer">
     <div class="footer-left">
-      <button class="btn-subtle" id="btnRenameNotebook" title="クリックでノートの名前を変更" style="font-size:0.82rem; font-weight:600; color:var(--text-muted); gap:6px;">
-        <span id="activeNotebookTitle">新規ノート</span>
-        <i class="fa-solid fa-pen-to-square" style="font-size:0.75rem; color:var(--accent-cyan);"></i>
+      <button class="btn-subtle" id="btnOverviewModal" title="全ページグリッド一覧">
+        <i class="fa-solid fa-border-all"></i> 全ページ一覧
       </button>
+      <span class="active-notebook-title" id="activeNotebookTitle">STRATEGYNOTE</span>
     </div>
 
     <div class="footer-center">
-      <button class="btn-footer" id="btnFirstPage" title="最初のページへ"><i class="fa-solid fa-backward-step"></i></button>
-      <button class="btn-footer" id="btnFooterPrev"><i class="fa-solid fa-caret-left"></i></button>
-      <div class="page-indicator">
+      <button class="btn-footer" id="btnFirstPage" title="最初のページへ"><i class="fa-solid fa-angles-left"></i></button>
+      <button class="btn-footer" id="btnFooterPrev" title="前へ"><i class="fa-solid fa-chevron-left"></i></button>
+
+      <div class="page-counter">
         <input type="number" id="pageNumberInput" min="1" value="1">
         <span id="totalPagesCount">/ 1 ページ</span>
       </div>
-      <button class="btn-footer" id="btnFooterNext"><i class="fa-solid fa-caret-right"></i></button>
-      <button class="btn-footer" id="btnLastPage" title="最後のページへ"><i class="fa-solid fa-forward-step"></i></button>
+
+      <button class="btn-footer" id="btnFooterNext" title="次へ"><i class="fa-solid fa-chevron-right"></i></button>
+      <button class="btn-footer" id="btnLastPage" title="最後のページへ"><i class="fa-solid fa-angles-right"></i></button>
     </div>
 
     <div class="footer-right">
-      <button class="btn-secondary btn-sm" id="btnOverviewModal">
-        <i class="fa-solid fa-border-all"></i> 一覧
+      <button class="btn-primary btn-sm mobile-hide-editor" id="btnAddPageFooter" onclick="app.addNewPage()">
+        <i class="fa-solid fa-plus"></i> <span id="lblAddPageFooter">ページ追加</span>
       </button>
     </div>
   </footer>
 
-  <!-- Modals -->
+  <!-- 📚 構造化パブリッシャーコンテンツ (Very Bottom, Collapsed/Folded by Default) -->
+  <article class="sn-knowledge-article" style="margin: 8px auto 16px auto; max-width: 1200px; padding: 0 14px; width: 100%;">
+    <details style="background: rgba(11, 13, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden; backdrop-filter: blur(10px);">
+      <summary style="padding: 8px 14px; font-size: 11.5px; font-weight: 600; color: var(--accent-cyan); cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;">
+        <span><i class="fa-solid fa-book-bookmark"></i> STRATEGYNOTE 活用ナレッジ ＆ デジタルノートガイド</span>
+        <span style="font-size: 9.5px; color: var(--text-muted); font-weight: normal;">▼ タップで解説を開く</span>
+      </summary>
+      <div style="padding: 12px 16px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 11px; line-height: 1.6; color: var(--text-main);">
+        <p style="margin-bottom: 10px; opacity: 0.9;">
+          STRATEGYNOTE は、仕事・学習・ゲーム攻略・プロジェクト管理における思考整理とマニュアル作成を極限までスムーズにする、高機能3D見開きWebデジタルノートプラットフォームです。
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: var(--accent-amber); display: block; margin-bottom: 4px;"><i class="fa-solid fa-book-open"></i> 1. 3Dリアル見開き ＆ ページ操作</strong>
+            実物のノートをめくるような直感的な3D見開き表示。ページの追加・複製・割り込み挿入・目次インデックス付けが自由自在に行えます。
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: var(--accent-cyan); display: block; margin-bottom: 4px;"><i class="fa-solid fa-layer-group"></i> 2. 画像・文字・手書き・Webリンク統合</strong>
+            クリップボードからの直接画像貼り付け（Ctrl+V）、自由位置テキストメモ、手書きペン注釈、関連Webサイトへの直感リンク挿入をサポート。
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: #c084fc; display: block; margin-bottom: 4px;"><i class="fa-solid fa-cloud"></i> 3. クラウド同期 ＆ ライブ連動配信</strong>
+            Googleログインによるマルチデバイス同期に対応。ライブ連動機能を使えば、チームメンバーや視聴者とリアルタイムでノート画面を共有可能です。
+          </div>
+        </div>
+        <footer style="margin-top: 10px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 9.5px; color: var(--text-muted); text-align: right;">
+          © STRATEGYNOTE Digital Notebook Platform. All rights reserved.
+        </footer>
+      </div>
+    </details>
+  </article>
 
-  <!-- Color Theme Selector Modal -->
+  <!-- Modal 1: Persona & Color Theme Picker (8 Color Themes) -->
   <div class="modal-overlay" id="modalThemePicker">
-    <div class="modal-card">
+    <div class="modal-card modal-lg">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-palette" style="color:var(--accent-cyan);"></i> カラーテーマの選択（全5種類）</h3>
+        <h3><i class="fa-solid fa-palette"></i> カラーテーマ設定</h3>
         <button class="modal-close" data-close="modalThemePicker">&times;</button>
       </div>
-      <div class="modal-body" style="padding:16px;">
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">
-          お好みのカラーテーマを選択できます。気分や用途に合わせていつでも切り替え可能です。
-        </p>
-
+      <div class="modal-body">
         <div class="theme-grid">
-          <div class="theme-card active" data-theme="gamer-dark">
-            <div class="theme-preview preview-cyber"></div>
+          <div class="theme-card" data-theme="gamer-dark">
+            <div class="theme-color-preview preview-cyber"></div>
             <div class="theme-info">
-              <strong>🎮 Cyber Neon (サイバーネオン)</strong>
-              <small>黒基調 ＋ 鮮やかなシアン・パープル光沢</small>
+              <h4>1. ゲーマーダーク (既定)</h4>
+              <p>ネオンブルー＆ダークサイバーUI</p>
             </div>
           </div>
-
           <div class="theme-card" data-theme="theme-business">
-            <div class="theme-preview preview-business"></div>
+            <div class="theme-color-preview preview-business"></div>
             <div class="theme-info">
-              <strong>💼 Corporate Blue (ビジネスブルー)</strong>
-              <small>落ち着いたネイビー ＋ ブルーの信頼感</small>
+              <h4>2. ビジネスネイビー</h4>
+              <p>落ち着いた信頼感のロイヤルブルー</p>
             </div>
           </div>
-
           <div class="theme-card" data-theme="theme-gold">
-            <div class="theme-preview preview-gold"></div>
+            <div class="theme-color-preview preview-gold"></div>
             <div class="theme-info">
-              <strong>👑 Luxury Gold (クロノスゴールド)</strong>
-              <small>高級感漂う漆黒 ＋ ゴールド・ブロンズアクセント</small>
+              <h4>3. クロノスゴールド 👑</h4>
+              <p>高級感あるアンバー＆ゴールド</p>
             </div>
           </div>
-
           <div class="theme-card" data-theme="theme-emerald">
-            <div class="theme-preview preview-emerald"></div>
+            <div class="theme-color-preview preview-emerald"></div>
             <div class="theme-info">
-              <strong>🌲 Emerald Forest (エメラルドフォレスト)</strong>
-              <small>深みのあるエメラルド ＋ ミントグリーンの癒やし</small>
+              <h4>4. エメラルドフォレスト</h4>
+              <p>目に優しいディープグリーン</p>
             </div>
           </div>
-
           <div class="theme-card" data-theme="theme-paper">
-            <div class="theme-preview preview-paper"></div>
+            <div class="theme-color-preview preview-paper"></div>
             <div class="theme-info">
-              <strong>📄 Minimal Paper (ライトペーパー)</strong>
-              <small>目に優しい明るい紙質感 ＋ スレートインク</small>
+              <h4>5. ミニマルペーパー (ホワイト)</h4>
+              <p>クリーンな白の上質紙と爽やかなスカイブルーUI</p>
+            </div>
+          </div>
+          <div class="theme-card" data-theme="theme-kraft">
+            <div class="theme-color-preview preview-kraft"></div>
+            <div class="theme-info">
+              <h4>6. クラフト生成り (アイボリー)</h4>
+              <p>無印やMDノートのような目に優しい温かい生成り調</p>
+            </div>
+          </div>
+          <div class="theme-card" data-theme="theme-sepia">
+            <div class="theme-color-preview preview-sepia"></div>
+            <div class="theme-info">
+              <h4>7. ヴィンテージ羊皮紙 (セピア)</h4>
+              <p>冒険日誌や古い洋書を思わせるクラシックな羊皮紙調</p>
+            </div>
+          </div>
+          <div class="theme-card" data-theme="theme-sage">
+            <div class="theme-color-preview preview-sage"></div>
+            <div class="theme-info">
+              <h4>8. ノートセージ (ナチュラル方眼)</h4>
+              <p>ロルバーンのような知的な淡いグリーンペーパー</p>
             </div>
           </div>
         </div>
@@ -333,328 +434,484 @@
     </div>
   </div>
 
-  <!-- Live Stream Synchronized Viewing Modal (With Stop Host & Leave Viewer Buttons) -->
-  <div class="modal-overlay" id="modalLiveStream">
-    <div class="modal-card modal-lg">
-      <div class="modal-header">
-        <h3 style="color:var(--accent-red);"><i class="fa-solid fa-tower-broadcast"></i> ライブ配信 ＆ めくり自動連動（同時視聴）</h3>
-        <button class="modal-close" data-close="modalLiveStream">&times;</button>
-      </div>
-      <div class="modal-body" style="padding:18px;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-          <!-- Host Panel -->
-          <div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.3); border-radius:10px; padding:16px; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-              <i class="fa-solid fa-headset" style="font-size:2.5rem; color:var(--accent-red); margin-bottom:10px;"></i>
-              <h4 style="font-size:0.95rem; margin-bottom:6px;">① 配信者（ホスト）として部屋を作る</h4>
-              <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.4; margin-bottom:10px;">
-                あなたがページをめくると、全視聴者の画面へFirebase Realtime DB経由で数ミリ秒でめくり同期されます！
-              </p>
-
-              <div style="margin-bottom:12px; text-align:center; background:rgba(0,0,0,0.3); padding:8px 10px; border-radius:6px; border:1px solid var(--border-glow);">
-                <span style="font-size:0.78rem; color:var(--accent-cyan); font-weight:bold;">
-                  <i class="fa-solid fa-users"></i> 同時接続上限: 配信者を含めて最大10名まで
-                </span>
-                <small style="color:var(--text-dim); display:block; font-size:0.7rem; margin-top:2px;">（ホスト1名 ＋ 視聴者9名まで安全同期）</small>
-              </div>
-
-              <button class="btn-primary" id="btnStartHostRoom" style="background:linear-gradient(135deg, #ef4444, #f97316); color:#fff; width:100%;">
-                <i class="fa-solid fa-tower-broadcast"></i> 配信ルームを発行 (ホスト開始)
-              </button>
-
-              <div id="hostRoomBox" style="display:none; margin-top:12px; background:rgba(0,0,0,0.4); padding:12px; border-radius:8px; border:1px solid rgba(0,242,254,0.3);">
-                <small style="color:var(--accent-green); font-weight:bold;">📡 Firebase通信中！部屋コード (合言葉):</small>
-                <div style="font-family:Orbitron, sans-serif; font-size:1.4rem; font-weight:800; color:var(--accent-cyan); letter-spacing:2px; margin:6px 0; cursor:pointer;" id="hostRoomCodeDisplay" title="クリックでコピー">LIVE-8849</div>
-                
-                <button class="btn-secondary btn-sm" id="btnCopyRoomCode" style="width:100%; border-color:var(--accent-cyan); color:var(--accent-cyan); font-weight:700; margin-top:4px;">
-                  <i class="fa-solid fa-copy"></i> <span id="lblCopyRoomCode">部屋コードをコピー</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Stop Host Broadcast Button -->
-            <div style="margin-top:16px;">
-              <button class="btn-secondary btn-danger" id="btnStopHostRoom" style="width:100%; font-weight:bold;">
-                <i class="fa-solid fa-power-off"></i> 配信をやめる (解散)
-              </button>
-            </div>
-          </div>
-
-          <!-- Viewer Panel -->
-          <div style="background:rgba(0, 242, 254, 0.05); border:1px solid var(--border-glow); border-radius:10px; padding:16px; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-              <i class="fa-solid fa-users-viewfinder" style="font-size:2.5rem; color:var(--accent-cyan); margin-bottom:10px;"></i>
-              <h4 style="font-size:0.95rem; margin-bottom:6px;">② 視聴者（リスナー）として参加する</h4>
-              <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.4; margin-bottom:12px;">
-                配信者の部屋コードを入力すると「Firebase連動めくりモード」になり、勝手な書き換えを防ぎつつ配信者の説明に画面が追従します。
-              </p>
-              <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <input type="text" id="inputViewerRoomCode" placeholder="例: LIVE-8849" style="flex:1; padding:6px 10px; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); border-radius:6px; color:#fff; font-family:Orbitron, sans-serif; text-transform:uppercase;">
-                <button class="btn-primary" id="btnJoinViewerRoom" style="padding:6px 12px; font-size:0.8rem;">
-                  参加
-                </button>
-              </div>
-              <small style="color:var(--text-dim); font-size:0.72rem;">※ 視聴者モード時はノートの内容は閲覧専用として安全に保護されます</small>
-            </div>
-
-            <!-- Stop Watching Live Stream Button -->
-            <div style="margin-top:16px;">
-              <button class="btn-secondary btn-danger" id="btnLeaveViewerRoom" style="width:100%; font-weight:bold;">
-                <i class="fa-solid fa-right-from-bracket"></i> 配信を見るのをやめる (退出)
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Capacity Limit Reached Modal -->
-  <div class="modal-overlay" id="modalCapacityLimit">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 style="color:var(--accent-amber);"><i class="fa-solid fa-lock"></i> ノート作成上限（3冊）に達しました</h3>
-        <button class="modal-close" data-close="modalCapacityLimit">&times;</button>
-      </div>
-      <div class="modal-body" style="text-align:center; padding:20px 16px;">
-        <i class="fa-solid fa-crown" style="font-size:3rem; color:var(--accent-gold); margin-bottom:10px;"></i>
-        <h4 style="font-size:1rem; margin-bottom:6px;" id="limitModalTitle">無料プランの上限に達しました</h4>
-        <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.4; margin-bottom:16px;" id="limitModalDesc">
-          無料プランではノート作成は<b>最大3冊まで</b>（合計100Pまで）となります。<br>
-          有料プラン（月額200円）にご加入いただくと、作成上限が<b>30冊まで大幅拡大</b>され、Chronos広告も非表示になります！
-        </p>
-
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn-primary" id="btnUpgradeToPaidSim" style="background:linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); color:#000; padding:10px; font-size:0.9rem; font-weight:bold;">
-            <i class="fa-solid fa-crown"></i> 有料プラン（月額200円）で30冊まで拡大
-          </button>
-          <button class="btn-secondary" data-close="modalCapacityLimit">
-            キャンセル
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Selective Keyboard Shortcuts Settings Modal -->
-  <div class="modal-overlay" id="modalShortcuts">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-keyboard"></i> キーボード個別設定 (機能別ON/OFF)</h3>
-        <button class="modal-close" data-close="modalShortcuts">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
-          ゲーム中や文字入力中の誤作動を防ぐため、必要なキー機能のみを選択してONにできます。（Spaceキーは除外済み）
-        </p>
-
-        <div class="kbd-toggle-list">
-          <div class="kbd-toggle-item">
-            <input type="checkbox" class="kbd-checkbox" id="kbdTogglePageTurnArrows">
-            <div class="kbd-info">
-              <strong><i class="fa-solid fa-arrows-left-right" style="color:var(--accent-cyan);"></i> 矢印キーめくり</strong>
-              <small><kbd>→</kbd> （次へ） / <kbd>←</kbd> （前へ）</small>
-            </div>
-          </div>
-
-          <div class="kbd-toggle-item">
-            <input type="checkbox" class="kbd-checkbox" id="kbdTogglePageTurnPgKeys">
-            <div class="kbd-info">
-              <strong><i class="fa-solid fa-file-lines" style="color:var(--accent-purple);"></i> PageUp / PageDown キーめくり</strong>
-              <small><kbd>PageDown</kbd> （次へ） / <kbd>PageUp</kbd> （前へ）</small>
-            </div>
-          </div>
-
-          <div class="kbd-toggle-item">
-            <input type="checkbox" class="kbd-checkbox" id="kbdToggleSearch" checked>
-            <div class="kbd-info">
-              <strong><i class="fa-solid fa-magnifying-glass" style="color:var(--accent-cyan);"></i> ノート内検索</strong>
-              <small><kbd>Ctrl</kbd> + <kbd>F</kbd></small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Export / Import / Share Modal -->
-  <div class="modal-overlay" id="modalShare">
-    <div class="modal-card modal-lg">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-share-nodes"></i> 保存・エクスポート・共有方法</h3>
-        <button class="modal-close" data-close="modalShare">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Range / Scope Selection Box -->
-        <div style="background:rgba(0,242,254,0.05); border:1px solid var(--border-glow); padding:14px; border-radius:10px; margin-bottom:16px;">
-          <h4 style="font-size:0.9rem; color:var(--text-main); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-sliders" style="color:var(--accent-cyan);"></i> エクスポート（共有）範囲の選択
-          </h4>
-          
-          <div style="display:flex; flex-direction:column; gap:8px; font-size:0.82rem;">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-              <input type="radio" name="exportScope" value="full" checked id="exportScopeFull">
-              <strong>📖 本1冊まるごと共有（全ページ）</strong>
-            </label>
-
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-              <input type="radio" name="exportScope" value="range" id="exportScopeRange">
-              <strong>📄 ページ範囲を指定して共有</strong>
-            </label>
-
-            <div id="exportRangeInputs" style="display:none; margin-left:26px; align-items:center; gap:8px; margin-top:4px;">
-              <span>P.</span>
-              <input type="number" id="exportStartPage" min="1" value="1" style="width:50px; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); border-radius:4px; color:var(--accent-cyan); text-align:center; padding:2px;">
-              <span>〜 P.</span>
-              <input type="number" id="exportEndPage" min="1" value="1" style="width:50px; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); border-radius:4px; color:var(--accent-cyan); text-align:center; padding:2px;">
-              <small style="color:var(--text-dim);">（指定したページ範囲のみを出力）</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="share-grid">
-          <div class="share-box">
-            <i class="fa-solid fa-file-export share-icon"></i>
-            <h4>① .strategy ファイル共有</h4>
-            <p>画像＋メモ＋手書き＋配置・自由サイズを1ファイルに出力。メールやチャットで送信し復元できます。</p>
-            <button class="btn-primary" id="btnExportData">
-              <i class="fa-solid fa-download"></i> 選択した範囲でファイルをエクスポート
-            </button>
-          </div>
-
-          <div class="share-box">
-            <i class="fa-solid fa-file-csv share-icon" style="color:var(--accent-green);"></i>
-            <h4>② CSV 表データエクスポート</h4>
-            <p>ページ名、メモテキスト、インデックス、Webリンク一覧を Excel やスプレッドシート形式で出力。</p>
-            <button class="btn-secondary" id="btnExportCSV">
-              <i class="fa-solid fa-file-excel"></i> CSVを出力 (.csv)
-            </button>
-          </div>
-        </div>
-
-        <div style="margin-top:14px; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); padding:12px; border-radius:8px; text-align:center;">
-          <h4 style="font-size:0.85rem; margin-bottom:4px;"><i class="fa-solid fa-file-import"></i> 配布されたノート/ページの読み込み</h4>
-          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:8px;">受け取った .strategy ファイルを選択して取り込みます。（新しい本として追加 or 開いている本に挿入を選択可能）</p>
-          <input type="file" id="importFileInput" accept=".strategy,.json" style="display:none;">
-          <button class="btn-secondary btn-sm" onclick="document.getElementById('importFileInput').click()">
-            <i class="fa-solid fa-upload"></i> ファイルを選択して読み込む
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Import Target Selection Choice Modal -->
-  <div class="modal-overlay" id="modalImportChoice">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-file-import" style="color:var(--accent-cyan);"></i> 共有データの取り込み方法を選択</h3>
-        <button class="modal-close" data-close="modalImportChoice">&times;</button>
-      </div>
-      <div class="modal-body" style="text-align:center; padding:18px;">
-        <i class="fa-solid fa-book-open" style="font-size:2.5rem; color:var(--accent-cyan); margin-bottom:10px;"></i>
-        <h4 style="font-size:0.95rem; margin-bottom:4px;" id="importChoiceFileTitle">共有ファイルを取り込みます</h4>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;" id="importChoicePageCount">
-          （全 0 ページのデータ）
-        </p>
-
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn-primary" id="btnImportAsNewNotebook" style="padding:10px; font-size:0.85rem; font-weight:bold; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); color:#050b14;">
-            📖 ① 新しいノート（本）として新規保存
-          </button>
-
-          <button class="btn-secondary" id="btnImportInsertIntoActive" style="padding:10px; font-size:0.85rem; font-weight:bold; border-color:var(--accent-cyan); color:var(--accent-cyan);">
-            📥 ② 開いているノートの指定位置にページ挿入
-          </button>
-
-          <button class="btn-secondary btn-subtle" data-close="modalImportChoice" style="margin-top:4px;">
-            キャンセル
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Page Overview Grid Modal -->
-  <div class="modal-overlay" id="modalOverview">
-    <div class="modal-card modal-lg">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-border-all"></i> ページ一覧</h3>
-        <button class="modal-close" data-close="modalOverview">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="page-grid" id="pageOverviewGrid"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Search Modal -->
+  <!-- Modal 2: Search Notebook Content (Ctrl + F) -->
   <div class="modal-overlay" id="modalSearch">
     <div class="modal-card">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-magnifying-glass"></i> ノート内検索</h3>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> ノート内全データ検索</h3>
         <button class="modal-close" data-close="modalSearch">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="メモ、リンク、インデックスタグを検索...">
+        <div class="search-box-row">
+          <input type="text" id="searchInput" placeholder="検索ワードを入力 (例: 手順, 重要, URL)..." autofocus>
         </div>
-        <div class="search-results" id="searchResults"></div>
+        <div class="search-results-list" id="searchResults">
+          <!-- Rendered dynamically -->
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Interactive Handwriting & Dynamic Stamp Canvas Modal -->
+  <!-- Modal 3: All Pages Grid Overview -->
+  <div class="modal-overlay" id="modalOverview">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-border-all"></i> 全ページ一覧サムネイル</h3>
+        <button class="modal-close" data-close="modalOverview">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="overview-grid" id="pageOverviewGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Export & Import Share Modal -->
+  <div class="modal-overlay" id="modalShare">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-share-nodes"></i> ノート共有・入出力 ＆ AI自動作成</h3>
+        <button class="modal-close" data-close="modalShare">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Tab Navigation Bar -->
+        <div class="modal-tabs-header">
+          <button class="modal-tab-btn active" id="tabBtnShareExport" data-tab="tabShareExport">
+            <i class="fa-solid fa-file-export"></i> 📤 エクスポート
+          </button>
+          <button class="modal-tab-btn" id="tabBtnShareImport" data-tab="tabShareImport">
+            <i class="fa-solid fa-file-import"></i> 📥 インポート (ファイル / 貼付)
+          </button>
+          <button class="modal-tab-btn" id="tabBtnShareAI" data-tab="tabShareAI">
+            <i class="fa-solid fa-robot"></i> 🤖 AIでノート作成
+          </button>
+        </div>
+
+        <!-- Tab 1: Export -->
+        <div class="modal-tab-pane active" id="tabShareExport">
+          <div class="share-section">
+            <h4>📤 ノートデータを出力 (エクスポート)</h4>
+            <p class="share-desc">ノートの指定ページまたは全データをバックアップ・共有ファイル (.strategy) として保存します。</p>
+            
+            <div class="export-scope-box">
+              <label class="scope-radio-label">
+                <input type="radio" name="exportScope" id="exportScopeFull" checked>
+                <span>全ページを出力</span>
+              </label>
+              <label class="scope-radio-label">
+                <input type="radio" name="exportScope" id="exportScopeRange">
+                <span>ページ範囲を指定して出力</span>
+              </label>
+            </div>
+
+            <div class="export-range-inputs" id="exportRangeInputs" style="display:none;">
+              <span>範囲: P.</span>
+              <input type="number" id="exportStartPage" min="1" value="1">
+              <span>〜 P.</span>
+              <input type="number" id="exportEndPage" min="1" value="1">
+            </div>
+
+            <div class="share-btn-row" style="margin-top:12px;">
+              <button class="btn-primary" id="btnExportData">
+                <i class="fa-solid fa-file-export"></i> .strategy ファイル保存
+              </button>
+              <button class="btn-secondary" id="btnExportCSV">
+                <i class="fa-solid fa-file-csv"></i> CSV形式出力
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Import -->
+        <div class="modal-tab-pane" id="tabShareImport">
+          <div class="share-section">
+            <h4>📁 ファイルから取り込み (.strategy / .json)</h4>
+            <p class="share-desc">保存した .strategy ファイルや、AIから出力された .json ファイルを選択して読み込みます。</p>
+            <input type="file" id="importFileInput" accept=".strategy,.json" style="display:none;">
+            <button class="btn-primary" id="btnTriggerImportFile">
+              <i class="fa-solid fa-file-import"></i> .strategy / .json ファイルを選択
+            </button>
+          </div>
+
+          <hr class="modal-divider">
+
+          <div class="share-section">
+            <h4>📋 JSONテキストを直接貼り付けて取り込み</h4>
+            <p class="share-desc">ChatGPTやClaudeなどのAIが出力したJSONテキストをそのまま貼り付けて取り込めます。（スマホでもファイル保存不要で一発取り込み！）</p>
+            <textarea id="importRawTextarea" rows="5" placeholder="ここにAIが出力したJSON（またはコードブロック）をそのまま貼り付けてください..." style="width:100%; box-sizing:border-box; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-main); font-family:monospace; font-size:0.82rem; padding:10px; border-radius:6px; resize:vertical;"></textarea>
+            <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+              <button class="btn-secondary" id="btnClearImportText">クリア</button>
+              <button class="btn-primary" id="btnImportFromText">
+                <i class="fa-solid fa-paste"></i> 貼り付けデータを取り込む
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: AI Prompt Generator -->
+        <div class="modal-tab-pane" id="tabShareAI">
+          <div class="share-section">
+            <h4>🤖 外部AI（ChatGPT / Claude / Gemini等）で攻略ノートを作る</h4>
+            <p class="share-desc" style="line-height:1.6;">
+              ChatGPT、Claude、Gemini などの生成AIに以下のプロンプトを渡すだけで、STRATEGYNOTEにそのまま取り込める本格的な攻略ノートを全自動で作成してくれます！
+            </p>
+
+            <div style="background:rgba(56, 189, 248, 0.08); border:1px solid rgba(56, 189, 248, 0.25); border-radius:8px; padding:12px; margin-bottom:14px;">
+              <h5 style="color:var(--accent-cyan); font-size:0.85rem; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-lightbulb"></i> かんたん3ステップ利用方法
+              </h5>
+              <ol style="font-size:0.82rem; color:var(--text-main); margin:0; padding-left:20px; line-height:1.7;">
+                <li>下の <strong>「📋 プロンプトをコピー」</strong> ボタンを押します。</li>
+                <li>お使いの <strong>ChatGPT / Claude / Gemini</strong> を開き、末尾の【作成依頼内容】に作りたいゲーム名や要望を書いて送信します。</li>
+                <li>AIから出力されたJSONをコピーし、このモーダルの <strong>「📥 インポート」</strong> タブに貼り付けて取り込みます。</li>
+              </ol>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+              <button class="btn-primary" id="btnCopyAIPrompt" style="background:linear-gradient(135deg, #0284c7, #06b6d4);">
+                <i class="fa-solid fa-copy"></i> 📋 プロンプトをクリップボードにコピー
+              </button>
+              <button class="btn-secondary" id="btnGoToImportTab">
+                <i class="fa-solid fa-paste"></i> 📥 出力されたJSONの貼り付け取り込みへ
+              </button>
+            </div>
+
+            <!-- Expandable prompt preview -->
+            <details style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:6px; padding:10px;" open>
+              <summary style="font-size:0.82rem; font-weight:bold; color:var(--accent-cyan); cursor:pointer; user-select:none;">
+                📄 プロンプト内容を確認 / 編集
+              </summary>
+              <textarea id="aiPromptTextarea" readonly rows="12" style="width:100%; box-sizing:border-box; margin-top:8px; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); color:var(--text-dim); font-family:monospace; font-size:0.75rem; padding:8px; border-radius:4px; resize:vertical; line-height:1.4;"># STRATEGYNOTE (.strategy) 作成プロンプト
+
+あなたはゲーム攻略メモ作成のアシスタントです。
+以下の【STRATEGYNOTE ファイル仕様】に厳密に従い、指定された攻略内容を「.strategy ファイル（JSON形式）」として作成・出力してください。
+
+---
+
+## 【STRATEGYNOTE ファイル仕様】
+1. 文字コード: UTF-8
+2. ファイル形式: JSON（拡張子は .strategy または .json）
+3. 全体構造:
+{
+  "version": 1,
+  "appName": "STRATEGYNOTE",
+  "exportScope": "full",
+  "notebook": {
+    "id": "nb_0",
+    "title": "ノートのタイトル",
+    "icon": "fa-book",
+    "createdAt": 1700000000000,
+    "updatedAt": 1700000000000
+  },
+  "pages": [
+    // ページごとのオブジェクト（0ページ目〜）
+  ],
+  "images": []
+}
+
+---
+
+## 【ページ（pages）の仕様】
+各ページは以下の構造を持ちます：
+{
+  "id": "p_0",
+  "notebookId": "nb_0",
+  "pageIndex": 0,          // 0, 1, 2... と連番
+  "bookmarkLabel": "概要",  // 見出しタブ名（※STRATEGYNOTEのタブ幅の都合上、6文字以内を推奨）
+  "isLocked": false,
+  "blocks": [
+    // このページに配置するブロック配列
+  ]
+}
+
+---
+
+## 【ブロック（blocks）の種類】
+
+### 1. メモブロック（note）※最重要
+文章、マクロ、表などを記述します。HTMLタグ（<pre>, <table>, <div>, <b>, inline style）がそのまま使用可能です。
+{
+  "type": "note",
+  "text": "表示したい内容（HTMLタグ使用可能。改行は\\nまたは<br>）",
+  "sizeClass": "size-large",      // "size-large"(100%), "size-medium"(72%), "size-small"(45%)
+  "alignClass": "align-left"      // "align-left"(左寄せ), "align-center"(中央), "align-right"(右寄せ)
+}
+※マクロは等幅で見やすくなるよう、以下のように <pre> タグで囲むことを推奨します：
+<pre style=\"font-family:'Consolas','Courier New',monospace; background:rgba(15,23,42,0.9); padding:10px; border-radius:6px; border:1px solid rgba(56,189,248,0.3); font-size:0.82rem; line-height:1.4; color:#e2e8f0; white-space:pre-wrap;\">
+/p マクロ内容
+</pre>
+※表を作成する場合は、Markdown表記（|---|）ではなくHTMLの <table> タグ（または整形済み <pre>）を使用してください。
+
+### 2. 見出しタグブロック（tag）
+ページの先頭に置くタイトル帯です。
+{
+  "type": "tag",
+  "tagType": "boss",              // "boss", "phase", "memo"
+  "text": "P1 リキッドフェーズ",
+  "sizeClass": "size-large",
+  "alignClass": "align-center"
+}
+
+### 3. リンクブロック（link）
+参考URLなどの外部リンクボタンです。
+{
+  "type": "link",
+  "url": "https://example.com",
+  "title": "参考記事リンク",
+  "sizeClass": "size-large",
+  "alignClass": "align-center"
+}
+
+---
+
+## 【出力時のルール】
+- 余計な解説文や挨拶は含めず、インポート可能な純粋なJSON（または ```json ... ``` コードブロック）のみを出力してください。
+- JSON文字列内のダブルクォーテーションや改行は正しくエスケープ（\" や \\n）してください。
+- 出力されたJSONを「〜.strategy」ファイルとして保存するか、STRATEGYNOTEアプリの「JSONテキスト直接貼り付け取り込み」に貼り付けることで、即座にノートとして取り込めます。
+
+---
+
+## 【作成依頼内容】
+（ここに「〇〇の攻略ノートを全〇ページで作ってください」「このURL/マクロを元に作ってください」と記載する）</textarea>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Import Target Choice Modal (Flexible Import Handling) -->
+  <div class="modal-overlay" id="modalImportChoice">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-file-import"></i> 共有ファイルの取り込み方法を選択</h3>
+        <button class="modal-close" data-close="modalImportChoice">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; font-weight:bold; color:var(--accent-cyan);" id="importChoiceFileTitle">共有ファイルを受け取りました</p>
+        <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:16px;" id="importChoicePageCount"></p>
+
+        <div class="action-list">
+          <button class="btn-primary" id="btnImportAsNewNotebook">
+            <i class="fa-solid fa-book"></i> ① 新しい別冊ノートとして追加保存
+          </button>
+          <button class="btn-secondary" id="btnImportInsertIntoActive" style="border-color:var(--accent-cyan); color:var(--accent-cyan);">
+            <i class="fa-solid fa-right-to-bracket"></i> ② 開いているノートの選択位置にページ挿入
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Live Stream Room Management Modal -->
+  <div class="modal-overlay" id="modalLiveStream">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-tower-broadcast"></i> リアルタイム Live 配信＆連動閲覧</h3>
+        <button class="modal-close" data-close="modalLiveStream">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:12px;">
+          画面を共有して複数人でリアルタイムに同じノートを操作・自動めくり連動できます（最大同時参加10名）。
+        </p>
+
+        <div class="live-host-section" style="background:var(--bg-card); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:16px;">
+          <h4 style="font-size:0.85rem; color:var(--accent-cyan); margin-bottom:6px;"><i class="fa-solid fa-satellite-dish"></i> 配信者（ホスト）として部屋を開設</h4>
+          <button class="btn-primary btn-sm" id="btnStartHostRoom"><i class="fa-solid fa-play"></i> 配信を開始する</button>
+
+          <div id="hostRoomBox" style="display:none; margin-top:10px; padding:8px; background:rgba(0,242,254,0.1); border:1px solid var(--accent-cyan); border-radius:6px;">
+            <p style="font-size:0.75rem; color:var(--text-main);">あなたの配信部屋コード:</p>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+              <span id="hostRoomCodeDisplay" style="font-family:'Fira Code',monospace; font-weight:bold; font-size:1.2rem; color:var(--accent-cyan); cursor:pointer;">LIVE-0000</span>
+              <button class="btn-secondary btn-sm" id="btnCopyRoomCode"><i class="fa-solid fa-copy"></i> <span id="lblCopyRoomCode">部屋コードをコピー</span></button>
+            </div>
+            <button class="btn-secondary btn-danger btn-sm" id="btnStopHostRoom" style="margin-top:8px;"><i class="fa-solid fa-stop"></i> 配信を解散して終了</button>
+          </div>
+        </div>
+
+        <div class="live-viewer-section" style="background:var(--bg-card); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+          <h4 style="font-size:0.85rem; color:var(--text-main); margin-bottom:6px;"><i class="fa-solid fa-eye"></i> 視聴者として連動参加</h4>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="inputViewerRoomCode" placeholder="部屋コード (例: LIVE-8849)" style="flex:1; padding:6px; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-main); border-radius:6px; font-family:'Fira Code',monospace;">
+            <button class="btn-secondary btn-sm" id="btnJoinViewerRoom"><i class="fa-solid fa-right-to-bracket"></i> 参加</button>
+          </div>
+          <button class="btn-secondary btn-danger btn-sm" id="btnLeaveViewerRoom" style="margin-top:8px;"><i class="fa-solid fa-door-open"></i> 視聴連動を解除（退出）</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: Interactive Handwriting & Draggable Stamp Canvas Modal -->
   <div class="modal-overlay" id="modalDraw">
     <div class="modal-card modal-lg">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-pen-line"></i> 手書き ＆ スタンプ合成キャンバス</h3>
+        <h3><i class="fa-solid fa-pen-nib"></i> 手書きメモ ＆ スタンプ作成キャンバス</h3>
         <button class="modal-close" data-close="modalDraw">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="draw-toolbar">
-          <label>ペン色:</label>
-          <input type="color" id="drawColor" value="#00f2fe">
-          <label>太さ:</label>
-          <input type="range" id="drawSize" min="2" max="24" value="4" style="width:80px;">
-          <input type="file" id="drawFileInput" accept="image/*" style="display:none;">
-          <button class="btn-secondary btn-sm" id="btnDrawAddImage">
-            <i class="fa-solid fa-image"></i> 画像/アイコンを貼り付け
-          </button>
-          <button class="btn-secondary btn-sm" id="btnDrawClear"><i class="fa-solid fa-rotate-left"></i> リセット</button>
-          <button class="btn-primary btn-sm" id="btnSaveDraw" style="margin-left:auto;"><i class="fa-solid fa-check"></i> ノートに追加</button>
+      <div class="modal-body" style="padding:10px;">
+        <div class="draw-toolbar" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:8px;">
+          <label style="font-size:0.75rem; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+            カラー: <input type="color" id="drawColor" value="#00f2fe">
+          </label>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+            太さ: <input type="range" id="drawSize" min="1" max="20" value="4">
+          </label>
+
+          <!-- Interactive Stamp Bar -->
+          <div class="stamps-bar" style="display:flex; gap:4px; margin-left:8px; padding-left:8px; border-left:1px solid var(--border-color);">
+            <button class="stamp-btn" data-emoji="⚠️" title="スタンプ: 警告">⚠️</button>
+            <button class="stamp-btn" data-emoji="💡" title="スタンプ: ひらめき">💡</button>
+            <button class="stamp-btn" data-emoji="✅" title="スタンプ: チェック">✅</button>
+            <button class="stamp-btn" data-emoji="🔥" title="スタンプ: 重要">🔥</button>
+            <button class="stamp-btn" data-emoji="⭐" title="スタンプ: 星">⭐</button>
+            <button class="stamp-btn" data-emoji="🎯" title="スタンプ: ターゲット">🎯</button>
+            <button class="stamp-btn" data-emoji="❌" title="スタンプ: バツ">❌</button>
+            <button class="stamp-btn" data-emoji="❓" title="スタンプ: 疑問">❓</button>
+          </div>
+
+          <div style="margin-left:auto; display:flex; gap:6px;">
+            <input type="file" id="drawFileInput" accept="image/*" style="display:none;">
+            <button class="btn-secondary btn-sm" id="btnDrawAddImage"><i class="fa-solid fa-image"></i> 画像挿入</button>
+            <button class="btn-secondary btn-danger btn-sm" id="btnDrawClear"><i class="fa-solid fa-rotate-left"></i> クリア</button>
+          </div>
         </div>
 
-        <div class="stamp-bar" id="stampBar">
-          <span class="stamp-label"><i class="fa-solid fa-icons"></i> スタンプ追加:</span>
-          <button class="stamp-btn" data-emoji="⚔️">⚔️</button>
-          <button class="stamp-btn" data-emoji="🛡️">🛡️</button>
-          <button class="stamp-btn" data-emoji="💀">💀</button>
-          <button class="stamp-btn" data-emoji="🗺️">🗺️</button>
-          <button class="stamp-btn" data-emoji="📌">📌</button>
-          <button class="stamp-btn" data-emoji="💡">💡</button>
-          <button class="stamp-btn" data-emoji="✅">✅</button>
-          <button class="stamp-btn" data-emoji="⚠️">⚠️</button>
-          <button class="stamp-btn" data-emoji="⭐">⭐</button>
-          <button class="stamp-btn" data-emoji="📁">📁</button>
+        <div class="draw-canvas-container" style="position:relative; width:100%; height:380px; background:#111522; border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+          <canvas id="drawCanvas" width="700" height="380" style="position:absolute; inset:0; width:100%; height:100%; cursor:crosshair; z-index:1;"></canvas>
+          <div class="stamp-overlay-container" id="stampOverlayContainer" style="position:absolute; inset:0; pointer-events:auto; z-index:2;"></div>
         </div>
 
-        <div class="draw-canvas-wrapper" id="drawCanvasWrapper">
-          <canvas id="drawCanvas" width="740" height="360"></canvas>
-          <div id="stampOverlayContainer" class="stamp-overlay-container"></div>
-          <div class="canvas-hint">💡 スタンプはドラッグで移動、＋/ーで拡大縮小、×で削除できます</div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+          <button class="btn-secondary" onclick="app.closeModal('modalDraw')">キャンセル</button>
+          <button class="btn-primary" id="btnSaveDraw"><i class="fa-solid fa-floppy-disk"></i> アクティブページに手書きを追加</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Firebase SDKs (Compat JS Library) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
+  <!-- Modal 8: Capacity Plan Limit Alert Modal -->
+  <div class="modal-overlay" id="modalCapacityLimit">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="limitModalTitle" style="color:var(--accent-amber);"><i class="fa-solid fa-lock"></i> 作成上限に達しました</h3>
+        <button class="modal-close" data-close="modalCapacityLimit">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="limitModalDesc" style="font-size:0.85rem; color:var(--text-main); line-height:1.6; margin-bottom:16px;">
+          無料プランでは作成上限に達しております。
+        </p>
+
+        <div style="background:rgba(245,158,11,0.1); border:1px solid var(--accent-amber); padding:12px; border-radius:var(--radius-md); margin-bottom:16px;">
+          <h4 style="font-size:0.85rem; color:var(--accent-amber); margin-bottom:4px;">👑 有料プラン (月額200円)</h4>
+          <ul style="font-size:0.78rem; color:var(--text-muted); padding-left:18px; line-height:1.6;">
+            <li>ノート作成上限: <b>最大30冊</b>まで拡大</li>
+            <li>合計ページ数制限なし</li>
+            <li>下部スポンサー広告非表示</li>
+          </ul>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button class="btn-secondary" onclick="app.closeModal('modalCapacityLimit')">閉じる</button>
+          <button class="btn-primary" id="btnUpgradeToPaidSim">👑 有料プランにアップグレード</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 9: Keyboard Shortcuts Help & Key Settings -->
+  <div class="modal-overlay" id="modalShortcuts">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-keyboard"></i> ショートカット ＆ キー設定</h3>
+        <button class="modal-close" data-close="modalShortcuts">&times;</button>
+      </div>
+      <div class="modal-body">
+        <ul class="shortcut-list" style="margin-bottom:14px;">
+          <li><kbd>→</kbd> / <kbd>PageDown</kbd> <span>次のページへめくる</span></li>
+          <li><kbd>←</kbd> / <kbd>PageUp</kbd> <span>前のページへ戻る</span></li>
+          <li><kbd>Home</kbd> / <kbd>End</kbd> <span>最初 / 最後のページへジャンプ</span></li>
+          <li><kbd>Ctrl</kbd> + <kbd>V</kbd> <span>アクティブページに画像を直接貼り付け</span></li>
+          <li><kbd>Ctrl</kbd> + <kbd>F</kbd> <span>ノート内全データ検索</span></li>
+          <li><kbd>Esc</kbd> <span>開いているダイアログを閉じる / 全画面表示解除</span></li>
+        </ul>
+
+        <div style="background:var(--bg-card); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+          <h4 style="font-size:0.85rem; color:var(--accent-cyan); margin-bottom:10px;"><i class="fa-solid fa-sliders"></i> キーボード操作 ON / OFF 有効化設定</h4>
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--text-main); margin-bottom:8px; cursor:pointer;">
+            <input type="checkbox" id="chkKbdArrows" checked> <span><kbd>←</kbd> / <kbd>→</kbd> 矢印キーで本をめくる</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--text-main); margin-bottom:8px; cursor:pointer;">
+            <input type="checkbox" id="chkKbdPgKeys" checked> <span><kbd>PageUp</kbd> / <kbd>PageDown</kbd> キーで本をめくる</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--text-main); cursor:pointer;">
+            <input type="checkbox" id="chkKbdSearch" checked> <span><kbd>Ctrl</kbd> + <kbd>F</kbd> でノート内検索を開く</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 10: In-App Screen Snipping Tool Modal -->
+  <div class="modal-overlay" id="modalSnipping">
+    <div class="modal-card" style="max-width: 960px; width: 96vw; max-height: 94vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 style="color:var(--accent-cyan); display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-crop-simple"></i>
+          <span>画面スニッピング (画面切り取り＆ページ貼り付け)</span>
+        </h3>
+        <button class="modal-close" data-close="modalSnipping">&times;</button>
+      </div>
+      <div class="modal-body" style="flex:1; display:flex; flex-direction:column; overflow:hidden; padding:12px;">
+        <!-- Instruction Bar -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px; font-size:0.8rem; color:var(--text-muted);">
+          <span><i class="fa-solid fa-mouse-pointer" style="color:var(--accent-cyan);"></i> マウスでドラッグして切り取りたい範囲を四角く囲んでください</span>
+          <span id="snippingSelectionDims" style="font-family:monospace; color:var(--accent-cyan); font-weight:bold;">未選択 (画面全体)</span>
+        </div>
+
+        <!-- Canvas Container with Crosshair Cursor -->
+        <div class="snipping-viewport" id="snippingViewport" style="position:relative; flex:1; min-height:360px; max-height:58vh; background:#000; border:1px solid var(--border-color); border-radius:8px; overflow:auto; cursor:crosshair; user-select:none; display:flex; align-items:center; justify-content:center;">
+          <canvas id="snippingSourceCanvas" style="display:block; max-width:100%; max-height:100%; object-fit:contain;"></canvas>
+          <div id="snippingCropBox" style="position:absolute; display:none; border:2px dashed #00f2fe; background:rgba(0, 242, 254, 0.15); box-shadow:0 0 0 9999px rgba(0,0,0,0.5); pointer-events:none; z-index:10;"></div>
+        </div>
+
+        <!-- Controls & Paste Sizing Options Bar -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:8px; border-top:1px solid var(--border-color);">
+          <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem;">
+            <label style="color:var(--text-main); font-weight:600;"><i class="fa-solid fa-arrows-left-right"></i> 貼り付けサイズ:</label>
+            <div class="btn-group" id="snipSizeButtonGroup" style="display:inline-flex; border-radius:6px; overflow:hidden; border:1px solid var(--border-color);">
+              <button class="btn-subtle active" id="btnSnipSizeLarge" style="padding:4px 10px; font-size:0.75rem;" data-size="size-large">大 (100% ページ幅)</button>
+              <button class="btn-subtle" id="btnSnipSizeMedium" style="padding:4px 10px; font-size:0.75rem;" data-size="size-medium">中 (72%)</button>
+              <button class="btn-subtle" id="btnSnipSizeSmall" style="padding:4px 10px; font-size:0.75rem;" data-size="size-small">小 (45%)</button>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn-secondary" id="btnRecaptureScreen"><i class="fa-solid fa-camera"></i> 再キャプチャ</button>
+            <button class="btn-secondary" onclick="app.closeModal('modalSnipping')">キャンセル</button>
+            <button class="btn-primary" id="btnConfirmSnippingPaste" style="background:linear-gradient(135deg, #0284c7, #06b6d4); font-weight:bold;">
+              <i class="fa-solid fa-paste"></i> <span id="lblConfirmSnipBtn">📥 この範囲を貼り付ける</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Bar -->
+  <div class="toast" id="toast">操作を完了しました</div>
+
+  <!-- Drop Zone Dragging Overlay -->
+  <div class="drop-zone" id="dropZoneGlobal" style="display:none;"></div>
+
+  <!-- Official Firebase SDK (v8 App, Auth, Database) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   
-  <script src="storage.js"></script>
-  <script src="app.js"></script>
+  <script src="firebase-config.js?v=20260918_v1"></script>
+  <script src="storage.js?v=20260918_v1"></script>
+  <script src="app.js?v=20260918_v1"></script>
 </body>
 </html>

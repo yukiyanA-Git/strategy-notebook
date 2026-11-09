@@ -103,10 +103,15 @@ class NotebookStorage {
   }
 
   // Save image blob and get image ID
-  async saveImage(imageId, blob) {
-    const tx = this.db.transaction('images', 'readwrite');
-    const store = tx.objectStore('images');
-    await store.put({ id: imageId, blob, createdAt: Date.now() });
+  saveImage(imageId, blob) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('images', 'readwrite');
+      const store = tx.objectStore('images');
+      store.put({ id: imageId, blob, createdAt: Date.now() });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
   }
 
   // Get image Blob URL
@@ -128,12 +133,29 @@ class NotebookStorage {
     });
   }
 
+  // Check if image exists in local IndexedDB
+  async hasImage(imageId) {
+    if (!imageId) return false;
+    return new Promise((resolve) => {
+      const tx = this.db.transaction('images', 'readonly');
+      const store = tx.objectStore('images');
+      const request = store.get(imageId);
+      request.onsuccess = () => resolve(!!(request.result && request.result.blob));
+      request.onerror = () => resolve(false);
+    });
+  }
+
   // Save Notebook
-  async saveNotebook(notebook) {
-    const tx = this.db.transaction('notebooks', 'readwrite');
-    const store = tx.objectStore('notebooks');
-    notebook.updatedAt = Date.now();
-    await store.put(notebook);
+  saveNotebook(notebook) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('notebooks', 'readwrite');
+      const store = tx.objectStore('notebooks');
+      notebook.updatedAt = Date.now();
+      store.put(notebook);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
   }
 
   // Get All Notebooks
@@ -148,13 +170,19 @@ class NotebookStorage {
     });
   }
 
-  // Save Pages
-  async savePages(pages) {
-    const tx = this.db.transaction('pages', 'readwrite');
-    const store = tx.objectStore('pages');
-    for (const page of pages) {
-      await store.put(page);
-    }
+  // Save Pages (Synchronously put all pages in single transaction, awaiting tx.oncomplete)
+  savePages(pages) {
+    return new Promise((resolve, reject) => {
+      if (!pages || pages.length === 0) return resolve();
+      const tx = this.db.transaction('pages', 'readwrite');
+      const store = tx.objectStore('pages');
+      for (const page of pages) {
+        store.put(page);
+      }
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
   }
 
   // Get Pages for Notebook
@@ -175,21 +203,31 @@ class NotebookStorage {
   }
 
   // Delete Page
-  async deletePage(pageId) {
-    const tx = this.db.transaction('pages', 'readwrite');
-    await tx.objectStore('pages').delete(pageId);
+  deletePage(pageId) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('pages', 'readwrite');
+      tx.objectStore('pages').delete(pageId);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
   }
 
   // Delete Notebook
   async deleteNotebook(notebookId) {
     const pages = await this.getPagesForNotebook(notebookId);
-    const tx = this.db.transaction(['notebooks', 'pages'], 'readwrite');
-    await tx.objectStore('notebooks').delete(notebookId);
-    
-    const pageStore = tx.objectStore('pages');
-    for (const page of pages) {
-      await pageStore.delete(page.id);
-    }
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(['notebooks', 'pages'], 'readwrite');
+      tx.objectStore('notebooks').delete(notebookId);
+      
+      const pageStore = tx.objectStore('pages');
+      for (const page of pages) {
+        pageStore.delete(page.id);
+      }
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
   }
 
   // Pre-fill Clean Initial Notebook on first run & remove sample data
