@@ -1,5 +1,7 @@
 ﻿{
   "projects": {
-    "default": "chronos-app-d149d"
+    "default": "strategy-notebook",
+    "database": "strategy-notebook",
+    "hosting": "chronos-app-d149d"
   }
 }

@@ -74,6 +74,25 @@ python -m http.server 8080
 
 ---
 
+## ☁️ Firebase デプロイ運用（ターゲット分離）
+
+本リポジトリは誤デプロイ防止のため、プロジェクトエイリアスによるターゲット分離が施されています。
+
+- **RTDB セキュリティルール (`database.rules.json`) のデプロイ先**:
+  - 対象: `strategy-notebook`（アプリ本体のデータベース・認証コア）
+  - コマンド:
+    ```bash
+    firebase deploy --only database
+    ```
+- **Web Hosting (`strategy-notebook-app`) のデプロイ先**:
+  - 対象: `chronos-app-d149d`（ホスティング基盤）
+  - コマンド:
+    ```bash
+    firebase deploy --only hosting -P hosting
+    ```
+
+---
+
 ## 📄 ライセンス
 
 Copyright (c) 2026 yukiyanArt / STRATEGYNOTE All Rights Reserved.
